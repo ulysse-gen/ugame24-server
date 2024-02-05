@@ -5,6 +5,7 @@ export default async function disconnect(socket: uGameServer.Socket) {
     socket.uGame.MainLogger.INFO(`${socket.Client.pseudo}(${socket.Client.username}) disconnected from the server.`);
     socket.broadcast.emit('player-leave', socket.Client.username);
     socket.Client.disconnecting = true;
+    socket.uGame.SocketServer.ConnectedClients.delete(socket.Client.id);
     /*setTimeout(() => {
         if (socket.Client.disconnecting) {
             socket.uGame.MainLogger.INFO(`${socket.Client.pseudo}(${socket.Client.username}) session expired.`);

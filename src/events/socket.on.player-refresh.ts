@@ -11,4 +11,5 @@ export default async function playerRefresh(socket: uGameServer.Socket, ClientCl
     }
 
     Client.Character.position.set(ClientClient.Character.position);
+    socket.broadcast.emit('player-refresh', Client.BroadcastVersion)
 }

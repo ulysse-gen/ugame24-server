@@ -11,7 +11,7 @@ export default async function(uGame: uGame, socket: uGameServer.Socket) {
         socket.disconnect();
     }
     
-    if (!socket.handshake.auth || !socket.handshake.auth.token || !socket.handshake.auth.token.startsWith("Bearer "))return socket.disconnect();
+    if (!socket.handshake.auth || !socket.handshake.auth.token || !socket.handshake.auth.token.startsWith("Bearer "))return socket.Kick(`Missing token.`);
 
     try {
         let Decoded = jwt.verify((socket.handshake.auth.token as string).substring(7), process.env.JWT_SECRET as string) as uGameServer.JwtPayload;
@@ -41,6 +41,7 @@ export default async function(uGame: uGame, socket: uGameServer.Socket) {
     }
 
     socket.broadcast.emit('player-join', socket.Client.BroadcastVersion);
+    socket.emit('players-online', Array.from(uGame.SocketServer.ConnectedClients.values()).filter(client => client.id != socket.Client.id).map(client => client.BroadcastVersion));
     if (!socket.Client.Character)socket.emit('no-character', true);
 
     

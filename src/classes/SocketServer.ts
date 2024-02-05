@@ -55,7 +55,7 @@ export default class SocketServer {
     async Start() {
         return new Promise((res, rej) => {
             this.HTTPServer.listen(process.env.SOCKET_PORT || 669, () => {
-                this.uGame.MainLogger.INFO(`Socket Server started on ${process.env.BASE_URL || "http://localhost"}:${process.env.SOCKET_PORT || 669}.`);
+                this.uGame.MainLogger.INFO(`Socket Server started on port :${process.env.SOCKET_PORT || 669}`);
                 res(true);
             })
         })

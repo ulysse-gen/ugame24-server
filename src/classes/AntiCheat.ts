@@ -33,6 +33,8 @@ export default class AntiCheat {
         }
         if (SpeedX >= this.speedLimit || SpeedX <= -this.speedLimit || SpeedY >= this.speedLimit || SpeedY <= -this.speedLimit){
             Client.AntiCheatData.Speed.Warned++;
+            Client.AntiCheatData.Speed.TempBypass = true;
+            console.log(`Player warned for speedhacking ${Client.AntiCheatData.Speed.Warned}`)
             setTimeout(async () => { if (Client)Client.AntiCheatData.Speed.Warned--; }, 1000);
             if (Client.AntiCheatData.Speed.Warned >= this.maxWarns){
                 Client.AntiCheatData.Speed.Warned = 0;

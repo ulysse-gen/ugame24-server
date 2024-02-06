@@ -1,6 +1,7 @@
 import { Socket as SocketIOSocket } from "socket.io";
 import Client from "../classes/Client";
 import SocketServer from "../classes/SocketServer";
+import uGame from "../classes/uGame";
 
 export namespace uGameServer {
     interface Server {

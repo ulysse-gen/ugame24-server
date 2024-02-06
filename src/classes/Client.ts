@@ -15,6 +15,7 @@ export default class Client {
     public pseudo!: boolean;
 
     public disconnecting?: boolean;
+    public kicked?: boolean;
 
     public Character?: Character;
 
@@ -60,6 +61,7 @@ export default class Client {
     }
 
     async Kick(KickMessage: string = "You have been kicked.") {
+        this.kicked = true;
         return this.Socket.Kick(KickMessage);
     }
 
@@ -93,6 +95,11 @@ export default class Client {
     async Leave(){
         this.uGame.MainLogger.INFO(`${this.pseudo}(${this.username}) disconnected from the server.`);
         this.Socket.broadcast.emit('player-leave', this.username);
+
+        if (this.kicked){
+            this.uGame.SocketServer.ConnectedClients.delete(this.id);
+            return;
+        }
         
         this.disconnecting = true;
         setTimeout((async () => {

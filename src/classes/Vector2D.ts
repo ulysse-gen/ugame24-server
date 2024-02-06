@@ -7,6 +7,14 @@ export default class Vector2D {
         this.y = y;
     }
 
+    get Values(){
+        return {x: this.x, y: this.y};
+    }
+
+    equal(Vector: Vector2D | {x: number, y: number}){
+        return this.x == Vector.x && this.y == Vector.y;
+    }
+
     set(Vector: Vector2D | {x: number, y: number}) {
         this.x = Vector.x;
         this.y = Vector.y;

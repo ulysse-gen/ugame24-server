@@ -13,8 +13,19 @@ export default class uGame {
     public DebugLogger!: Logger;
 
     public SocketServer!: SocketServer;
+
+    private TargetTPS: number;
     constructor() {
         this.initialized = false;
+
+        this.TargetTPS = 50;
+    }
+
+    async Tick() {
+        if (!this.initialized)return false;
+        this.SocketServer.IOServer.emit('player-refresh', Array.from(this.SocketServer.ConnectedClients.values()).map(client=>client.BroadcastVersion));
+
+        setTimeout(this.Tick.bind(this), 1000/this.TargetTPS);
     }
 
     async Start() {
@@ -22,6 +33,7 @@ export default class uGame {
         this.MainLogger.INFO(`Starting uGame.`);
         await this.SocketServer.Start();
         this.MainLogger.INFO(`Started uGame.`);
+        this.Tick();
         return this;
     }
 

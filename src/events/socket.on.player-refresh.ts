@@ -5,11 +5,8 @@ export default async function playerRefresh(socket: uGameServer.Socket, ClientCl
     if (!socket.Client.Character || !Client || !Client.Character || !ClientClient.Character)return;
 
     let MovementVerify = socket.uGame.SocketServer.AntiCheat.MovementVerify(Client, ClientClient);
-    if (MovementVerify) {
-        socket.emit('player-refresh', Client.ClientVersion);
-        return;
-    }
+    if (MovementVerify)return socket.Client.Refresh();
 
     Client.Character.position.set(ClientClient.Character.position);
-    socket.broadcast.emit('player-refresh', Client.BroadcastVersion)
+    Client.Character.velocity.set(ClientClient.Character.Velocity);
 }

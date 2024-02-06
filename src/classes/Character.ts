@@ -26,12 +26,14 @@ export default class Character {
     public Spell3?: Spell;
 
     public position: Vector2D;
+    public velocity: Vector2D;
     public size: Vector2D;
     constructor(Client: Client) {
         this.Client = Client;
         this.uGame = Client.uGame;
 
         this.position = new Vector2D(0, 0);
+        this.velocity = new Vector2D(0, 0);
         this.size = new Vector2D(0, 0);
     }
 

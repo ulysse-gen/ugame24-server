@@ -12,7 +12,7 @@ export default class SocketServer {
 
     private ExpressAPP!: Express;
     private HTTPServer!: HTTPServer;
-    private IOServer!: IOServer;
+    public IOServer!: IOServer;
 
     public AntiCheat: AntiCheat;
 

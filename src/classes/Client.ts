@@ -60,10 +60,46 @@ export default class Client {
     }
 
     async Kick(KickMessage: string = "You have been kicked.") {
-        this.Socket.Kick(KickMessage);
+        return this.Socket.Kick(KickMessage);
     }
 
     async Ban(BanMessage: string = "You have been banned.") {
-        this.Socket.Kick(BanMessage);
+        return this.Socket.Kick(BanMessage);
+    }
+
+    async Refresh(Client: Client = this) {
+        return this.Socket.emit('self-refresh', Client.ClientVersion);
+    }
+
+    async Join() {
+        this.uGame.MainLogger.INFO(`${this.pseudo}(${this.username}) connected to the server.`);
+        this.uGame.SocketServer.ConnectedClients.set(this.id, this);
+        this.Socket.emit('welcome', this.ClientVersion);
+        this.Socket.broadcast.emit('player-join', this.BroadcastVersion);
+        this.Socket.emit('players-online', Array.from(this.uGame.SocketServer.ConnectedClients.values()).filter(client => client.id != this.id).map(client => client.BroadcastVersion));
+        if (!this.Character)this.Socket.emit('no-character', true);
+    }
+
+    async ReJoin(socket: uGameServer.Socket){
+        this.uGame.MainLogger.INFO(`${this.pseudo}(${this.username}) reconnected to the server.`);
+        delete this.disconnecting;
+        this.Socket = socket;
+        this.Socket.emit('welcome-back', this.ClientVersion);
+        this.Socket.broadcast.emit('player-join', this.BroadcastVersion);
+        this.Socket.emit('players-online', Array.from(this.uGame.SocketServer.ConnectedClients.values()).filter(client => client.id != this.id && !client.disconnecting).map(client => client.BroadcastVersion));
+        if (!this.Character)this.Socket.emit('no-character', true);
+    }
+
+    async Leave(){
+        this.uGame.MainLogger.INFO(`${this.pseudo}(${this.username}) disconnected from the server.`);
+        this.Socket.broadcast.emit('player-leave', this.username);
+        
+        this.disconnecting = true;
+        setTimeout((async () => {
+            if (this.uGame.SocketServer.ConnectedClients.has(this.id) || !this.disconnecting)return;
+            this.uGame.MainLogger.INFO(`${this.pseudo}(${this.username}) session expired.`);
+            this.uGame.SocketServer.ConnectedClients.delete(this.id);
+        }).bind(this), 10000);
+        return true;
     }
 }

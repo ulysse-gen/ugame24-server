@@ -1,5 +1,6 @@
 import { Socket as SocketIOSocket } from "socket.io";
 import Client from "../classes/Client";
+import SocketServer from "../classes/SocketServer";
 
 export namespace uGameServer {
     interface Server {
@@ -16,6 +17,7 @@ export namespace uGameServer {
         Client: Client;
         Kick: Function;
         uGame: uGame;
+        SocketServer: SocketServer;
     }
 
     interface SocketMiddleware extends SocketIOSockett<DefaultEventsMap, DefaultEventsMap, DefaultEventsMap, any> {
